@@ -11,11 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+    /*
+       É criada uma classe como 'base' e aqui é onde será implementado a lógica de como a classe vai funcionar. Com seus atributos, métodos e construtores.
+       Métodos com o mesmo nome, mas como parâmetros diferentes são chamados de sobre carga.
+       Pode ser criado métodos abstratos (também numa classe abstrata) para que as classes que herdarem desta classe, assumam a responsablidade de implementar o método da maneira como for mais conivente a ela. Isso é o conceito da herança.
+       O polimorfismo acontece quando é criado outra(s) classe(s) que herdam de uma clsse específica. Então na hora de instanciar um objeto, pode se usar um mesmo objeto para coisas diferentes.
+    */
+
 @Data
 public abstract class Stock {
+    private static int STOCK_CODE = 1; //Variável colocada em todos os construtores para atribuir um número crescente cada vez que alguma estoque for instanciado
 
-    private static int STOCK_CODE = 1;
-
+    // Atributos
     protected Integer stockCode;
     protected String stockName;
     protected String productSize;
@@ -25,6 +32,7 @@ public abstract class Stock {
 
     protected List<Product> products = new ArrayList<>();
 
+// Construtores
     public Stock(String stockName) {
         this.stockName = stockName;
         this.stockCode = STOCK_CODE++;
@@ -54,6 +62,7 @@ public abstract class Stock {
         this.setProductValid(productValid.getDescription());
     }
 
+// Métodos
     public void increment(Product product) {
         if (product.getProductStockCode() == this.stockCode) {
             if (productNameEquals(product.getProductName())) {
@@ -89,11 +98,13 @@ public abstract class Stock {
         }
     }
 
+    // Método criado para navegar na lista de produtos e verificar se existe um produto com nome igual ao que está sendo passado, retornando um boolean
     private boolean productNameEquals(String productName) {
         return this.products.stream()
                 .anyMatch(name -> name.getProductName().equalsIgnoreCase(productName));
     }
 
+    // Método criado para navegar na lista de produtos e verificar se existe um produto com nome igual ao que está sendo passado, retornando um 'Product'
     private Product ifProductByNameExist(String productName) {
         Product product = this.products.stream()
                 .filter(name -> name.getProductName().equalsIgnoreCase(productName))
@@ -101,14 +112,7 @@ public abstract class Stock {
         return product;
     }
 
-    private Optional<Integer> ifAlreadyExistThenIncrement(Product expectedProduct) {
-        Optional<Integer> expectedName = products.stream()
-                .filter(product -> product.getProductName().equalsIgnoreCase(expectedProduct.getProductName()))
-                .map(productQuantity -> productQuantity.getProductQuantity())
-                .reduce((a, b) -> a + b);
-        return expectedName;
-    }
-
+    // Método abstrato
     public abstract void productsList();
 
     @Override
